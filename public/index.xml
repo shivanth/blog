@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dubious Thesis</title>
+    <link>shivanthmp.github.io/</link>
+    <description>Recent content on Dubious Thesis</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 09 Feb 2018 23:00:20 +0530</lastBuildDate>
+    
+        <atom:link href="shivanthmp.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Sequential Execution in asynchronous Javascript</title>
+      <link>shivanthmp.github.io/posts/first-post/</link>
+      <pubDate>Fri, 09 Feb 2018 23:00:20 +0530</pubDate>
+      
+      <guid>shivanthmp.github.io/posts/first-post/</guid>
+      <description>
+
+&lt;p&gt;Getting sequential tasks done in &lt;code&gt;callback&lt;/code&gt; based asynchronous code is hard. Let us assume 2 I/O intensive tasks, &lt;code&gt;eat&lt;/code&gt; and &lt;code&gt;sleep&lt;/code&gt;.
+Consider the following snippet&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;
+eat(function(err){
+         console.log(&#39;Bob ate&#39;);
+});
+
+drink(function(err){
+         console.log(&#39;Bob drank&#39;);
+});
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The output of the above snippet can depend on the I/O associated with both eating  and sleeping. Notice that we have only defined the callback function for these tasks and not the task itself. The functions eat and sleep tasks are defined elsewhere, but they are guaranteed to execute the callback after the task is completed. In the sequential world this looks like,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;eat();
+console.log(&#39;Bob ate&#39;);
+drink();
+console.log(&#39;Bob drank&#39;);
+
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The trouble with the callback based approach is that there is no guarantee that Bob will eat before he sleeps. Depending on the current state of the system, bob can complete drinking first or bob can complete eating first. Let us try to serialize the tasks eat and drink&lt;/p&gt;
+
+&lt;h3 id=&#34;plain-javascript&#34;&gt;Plain Javascript&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var tasks = [eat, drink];
+
+function iterate(count){
+  if (count == tasks.length)
+    return;
+  else{
+    //You could bind variables too
+    tasks[count](function(err){
+       if(err){
+         //handle error
+         //return if if you dont want the tasks to continue
+       }
+       iterate(count + 1);
+    });
+   }
+}
+iterate(0);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;async-library&#34;&gt;async library&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var tasks = [eat, drink]
+
+async.series(tasks); //as simple as that
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;apply-a-function-on-a-collection-sequentially&#34;&gt;Apply a function on a collection sequentially&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var data = [meat, carne, fleish]
+async.eachSeries(data, eat);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;promisify-the-function&#34;&gt;Promisify the function&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;const eatAsync = new Promise((resolve,reject) =&amp;gt; {
+    eat(function(err){
+      if(err){
+        reject(err);
+        return;
+      }
+      resolve();
+    });
+}
+
+const drinkAsync = new Promise((resolve,reject) =&amp;gt; {
+    drink(function(err){
+      if(err){
+        reject(err);
+        return;
+      }
+      resolve();
+    });
+}
+
+eat().then(sleep())
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;async-await&#34;&gt;Async/Await&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;await eat();
+await sleep()
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

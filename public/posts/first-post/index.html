@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Sequential Execution in asynchronous Javascript</title>
+	
+	<meta name="description" content="">
+	<meta name="image" content="">
+	
+	<meta itemprop="name" content="Sequential Execution in asynchronous Javascript">
+	<meta itemprop="description" content="">
+	<meta itemprop="image" content="">
+	
+	<meta name="og:title" content="Sequential Execution in asynchronous Javascript">
+	<meta name="og:description" content="">
+	
+	<meta name="og:url" content="shivanthmp.github.io/posts/first-post/">
+	<meta name="og:site_name" content="Sequential Execution in asynchronous Javascript">
+	<meta name="og:type" content="article">
+	
+	<meta name="article:tag" content="">
+	<link rel="stylesheet" type="text/css" href="shivanthmp.github.iocss/style.css">
+	
+	
+	
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+
+<body>
+
+<header>
+	
+	<a href="shivanthmp.github.io" style="float: left;color:#777;"><strong>Dubious Thesis</strong></a>
+	
+	
+	
+	
+	
+	<a href="shivanthmp.github.ioindex.xml" style="color:#777;float: right;"><strong><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></strong></a>
+</header>
+
+
+<div id="loadingMask" style="width: 100%; height: 100%; position: fixed; background: #fff;"></div>
+<script>
+function fadeOut(el) {
+  el.style.opacity = 1;
+
+  var last = +new Date();
+  var tick = function() {
+    el.style.opacity = +el.style.opacity - (new Date() - last) / 80;
+    last = +new Date();
+    
+
+    if (el.style.opacity > 0) {
+      (window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
+    } else {
+      el.style.display='none';
+    }
+  };
+
+  tick();
+}
+
+function ready(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+         el = document.getElementById('loadingMask');
+         fadeOut(el);
+        var elements = document.querySelectorAll("img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("alt")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("alt"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+window.onload = ready;
+</script>
+
+<div class="content">
+  <h1>Sequential Execution in asynchronous Javascript <aside></aside></h1>
+  
+
+<p>Getting sequential tasks done in <code>callback</code> based asynchronous code is hard. Let us assume 2 I/O intensive tasks, <code>eat</code> and <code>sleep</code>.
+Consider the following snippet</p>
+
+<pre><code class="language-javascript">
+eat(function(err){
+         console.log('Bob ate');
+});
+
+drink(function(err){
+         console.log('Bob drank');
+});
+
+</code></pre>
+
+<p>The output of the above snippet can depend on the I/O associated with both eating  and sleeping. Notice that we have only defined the callback function for these tasks and not the task itself. The functions eat and sleep tasks are defined elsewhere, but they are guaranteed to execute the callback after the task is completed. In the sequential world this looks like,</p>
+
+<pre><code class="language-javascript">eat();
+console.log('Bob ate');
+drink();
+console.log('Bob drank');
+
+
+</code></pre>
+
+<p>The trouble with the callback based approach is that there is no guarantee that Bob will eat before he sleeps. Depending on the current state of the system, bob can complete drinking first or bob can complete eating first. Let us try to serialize the tasks eat and drink</p>
+
+<h3 id="plain-javascript">Plain Javascript</h3>
+
+<pre><code class="language-javascript">var tasks = [eat, drink];
+
+function iterate(count){
+  if (count == tasks.length)
+    return;
+  else{
+    //You could bind variables too
+    tasks[count](function(err){
+       if(err){
+         //handle error
+         //return if if you dont want the tasks to continue
+       }
+       iterate(count + 1);
+    });
+   }
+}
+iterate(0);
+</code></pre>
+
+<h3 id="async-library">async library</h3>
+
+<pre><code class="language-javascript">var tasks = [eat, drink]
+
+async.series(tasks); //as simple as that
+
+</code></pre>
+
+<h4 id="apply-a-function-on-a-collection-sequentially">Apply a function on a collection sequentially</h4>
+
+<pre><code class="language-javascript">var data = [meat, carne, fleish]
+async.eachSeries(data, eat);
+</code></pre>
+
+<h3 id="promisify-the-function">Promisify the function</h3>
+
+<pre><code class="language-javascript">const eatAsync = new Promise((resolve,reject) =&gt; {
+    eat(function(err){
+      if(err){
+        reject(err);
+        return;
+      }
+      resolve();
+    });
+}
+
+const drinkAsync = new Promise((resolve,reject) =&gt; {
+    drink(function(err){
+      if(err){
+        reject(err);
+        return;
+      }
+      resolve();
+    });
+}
+
+eat().then(sleep())
+</code></pre>
+
+<h4 id="async-await">Async/Await</h4>
+
+<pre><code class="language-javascript">await eat();
+await sleep()
+</code></pre>
+
+</div>
+
+
+
+
+<footer>
+	<p>© 2017-2018, all rights reserved.</a>
+</footer>
+</body>
+</html>
