@@ -1,0 +1,4 @@
+baseURL = "shivanthmp.github.io"
+languageCode = "en-us"
+title = "Dubious Thesis"
+theme = "one"
