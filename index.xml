@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Dubious Thesis</title>
-    <link>shivanth.github.io/</link>
+    <link>https://shivanth.github.io/</link>
     <description>Recent content on Dubious Thesis</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 09 Feb 2018 23:00:20 +0530</lastBuildDate>
     
-        <atom:link href="shivanth.github.io/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://shivanth.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Sequential Execution in asynchronous Javascript</title>
-      <link>shivanth.github.io/posts/first-post/</link>
+      <link>https://shivanth.github.io/posts/first-post/</link>
       <pubDate>Fri, 09 Feb 2018 23:00:20 +0530</pubDate>
       
-      <guid>shivanth.github.io/posts/first-post/</guid>
+      <guid>https://shivanth.github.io/posts/first-post/</guid>
       <description>
 
 &lt;p&gt;Getting sequential tasks done in &lt;code&gt;callback&lt;/code&gt; based asynchronous code is hard. Let us assume 2 I/O intensive tasks, &lt;code&gt;eat&lt;/code&gt; and &lt;code&gt;sleep&lt;/code&gt;.
