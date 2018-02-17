@@ -124,6 +124,8 @@ console.log('Bob drank');
 
 <h3 id="plain-javascript">Plain Javascript</h3>
 
+<p>This is a method that works seemlessly using recursion. You dont need any packages.</p>
+
 <pre><code class="language-javascript">var tasks = [eat, drink];
 
 function iterate(count){
@@ -145,6 +147,8 @@ iterate(0);
 
 <h3 id="async-library">async library</h3>
 
+<p><a href="https://caolan.github.io/async/">async</a> is a popular library used for sequantial/parallell task execution in node.js. It is a nice utility to have in your armory.</p>
+
 <pre><code class="language-javascript">var tasks = [eat, drink]
 
 async.series(tasks); //as simple as that
@@ -158,6 +162,8 @@ async.eachSeries(data, eat);
 </code></pre>
 
 <h3 id="promisify-the-function">Promisify the function</h3>
+
+<p>Primises were introduced in javascript to ease asynchronous programming. We will use it to get our tasks done sequentially :-)</p>
 
 <pre><code class="language-javascript">const eatAsync = new Promise((resolve,reject) =&gt; {
     eat(function(err){
@@ -184,8 +190,20 @@ eat().then(sleep())
 
 <h4 id="async-await">Async/Await</h4>
 
-<pre><code class="language-javascript">await eat();
-await sleep()
+<p>Finally the latest javascript feature, <code>async</code> and <code>await</code> is technically keywords to be used to promisify and wait on promises respectively</p>
+
+<pre><code class="language-javascript">const eatAsync = async () =&gt; {
+      await eat();
+}
+
+const sleepAsync = async () =&gt; {
+      await sleep();
+}
+
+\\These are executed sequentially
+
+await eatAsync();
+await sleepAsync()
 </code></pre>
 
 </div>
