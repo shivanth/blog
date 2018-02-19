@@ -96,7 +96,7 @@ window.onload = ready;
   <h1>Sequential Execution in asynchronous Javascript <aside></aside></h1>
   
 
-<p>Getting sequential tasks done in <code>callback</code> based asynchronous code is hard. Let us assume 2 I/O intensive tasks, <code>eat</code> and <code>sleep</code>.
+<p>Getting sequential tasks done in <code>callback</code> based asynchronous code is hard. Let us assume 2 I/O intensive tasks, <code>eat</code> and <code>drink</code>.
 Consider the following snippet</p>
 
 <pre><code class="language-javascript">
@@ -110,7 +110,7 @@ drink(function(err){
 
 </code></pre>
 
-<p>The output of the above snippet can depend on the I/O associated with both eating  and sleeping. Notice that we have only defined the callback function for these tasks and not the task itself. The functions eat and sleep tasks are defined elsewhere, but they are guaranteed to execute the callback after the task is completed. In the sequential world this looks like,</p>
+<p>The output of the above snippet can depend on the I/O associated with eating  and drinking. Notice that we have only defined the callback function for these tasks and not the task itself. The functions <code>eat</code> and <code>drinnk</code> tasks are defined elsewhere, but they are guaranteed to execute the callback after the task is completed. In the sequential world this looks like,</p>
 
 <pre><code class="language-javascript">eat();
 console.log('Bob ate');
@@ -120,7 +120,7 @@ console.log('Bob drank');
 
 </code></pre>
 
-<p>The trouble with the callback based approach is that there is no guarantee that Bob will eat before he sleeps. Depending on the current state of the system, bob can complete drinking first or bob can complete eating first. Let us try to serialize the tasks eat and drink</p>
+<p>The trouble with the callback based approach is that there is no guarantee that Bob will eat before he drinks. Depending on the current state of the system, bob can finish his drinks first or vice-versa. Let us try to serialize the tasks eat and drink</p>
 
 <h3 id="plain-javascript">Plain Javascript</h3>
 

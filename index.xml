@@ -19,7 +19,7 @@
       <guid>https://shivanth.github.io/blog/posts/first-post/</guid>
       <description>
 
-&lt;p&gt;Getting sequential tasks done in &lt;code&gt;callback&lt;/code&gt; based asynchronous code is hard. Let us assume 2 I/O intensive tasks, &lt;code&gt;eat&lt;/code&gt; and &lt;code&gt;sleep&lt;/code&gt;.
+&lt;p&gt;Getting sequential tasks done in &lt;code&gt;callback&lt;/code&gt; based asynchronous code is hard. Let us assume 2 I/O intensive tasks, &lt;code&gt;eat&lt;/code&gt; and &lt;code&gt;drink&lt;/code&gt;.
 Consider the following snippet&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;
@@ -33,7 +33,7 @@ drink(function(err){
 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The output of the above snippet can depend on the I/O associated with both eating  and sleeping. Notice that we have only defined the callback function for these tasks and not the task itself. The functions eat and sleep tasks are defined elsewhere, but they are guaranteed to execute the callback after the task is completed. In the sequential world this looks like,&lt;/p&gt;
+&lt;p&gt;The output of the above snippet can depend on the I/O associated with eating  and drinking. Notice that we have only defined the callback function for these tasks and not the task itself. The functions &lt;code&gt;eat&lt;/code&gt; and &lt;code&gt;drinnk&lt;/code&gt; tasks are defined elsewhere, but they are guaranteed to execute the callback after the task is completed. In the sequential world this looks like,&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;eat();
 console.log(&#39;Bob ate&#39;);
@@ -43,7 +43,7 @@ console.log(&#39;Bob drank&#39;);
 
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;The trouble with the callback based approach is that there is no guarantee that Bob will eat before he sleeps. Depending on the current state of the system, bob can complete drinking first or bob can complete eating first. Let us try to serialize the tasks eat and drink&lt;/p&gt;
+&lt;p&gt;The trouble with the callback based approach is that there is no guarantee that Bob will eat before he drinks. Depending on the current state of the system, bob can finish his drinks first or vice-versa. Let us try to serialize the tasks eat and drink&lt;/p&gt;
 
 &lt;h3 id=&#34;plain-javascript&#34;&gt;Plain Javascript&lt;/h3&gt;
 
